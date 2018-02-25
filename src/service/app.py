@@ -142,7 +142,7 @@ def add_user():
     # Validate and deserialize input
     data, errors = user_schema.load(request.form)
     if errors:
-        return make_json_response(errors)
+        return make_json_response(errors, False)
 
     password_hash = bcrypt.hashpw(data['password'].encode("utf-8"), bcrypt.gensalt())
     new_user = User(data['username'], password_hash, data['fullname'], data['age'])
