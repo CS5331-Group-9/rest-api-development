@@ -1,5 +1,5 @@
 var API_ENDPOINT = "http://192.168.33.10:8080";
-var WEB_BASEURL = "http://192.168.33.10:80";
+var WEB_BASEURL = "http://192.168.33.10";
 
 $('#register-btn').click(function () {
     var user_info = {
@@ -16,7 +16,7 @@ $('#register-btn').click(function () {
         success : function (response) {
             if (response.status == true){
                 alert("Registration success!");
-                location.replace(WEB_BASEURL + "/login/login.html");
+                location.replace(WEB_BASEURL + "/login.html");
             }
 
             var error_string = "Error:\n\r";
