@@ -1,4 +1,5 @@
-var API_ENDPOINT = "http://192.168.33.10:8080"
+var API_ENDPOINT = "http://192.168.33.10:8080";
+var WEB_BASEURL = "http://192.168.33.10:80";
 
 $('#login-btn').click(function () {
     var user_info = {
@@ -11,21 +12,12 @@ $('#login-btn').click(function () {
         data: user_info,
         type: 'post',
         success : function (response) {
-            console.log(response);
             if (response.status == true){
-                location.replace(API_ENDPOINT + "/diary");
+                window.sessionStorage.token = response.token;
+                location.replace(WEB_BASEURL + "/diary");
+            } else {
+                alert("Wrong username or password");
             }
-
-            var error_string = "Error:\n\r";
-
-            if (!$.isEmptyObject(response.error)){
-                $.each(response.error, function( index, value ) {
-                    error_string += value + "\n\r";
-                });
-
-                alert(error_string);
-            }
-
         }
     });
 });
