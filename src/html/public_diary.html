@@ -1,45 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Public Diary</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" crossorigin="anonymous">
 </head>
+
 <body>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-content" aria-controls="nav-content"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-<table class="table" id="diary-table">
-    <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Publish Date</th>
-        <th>Text</th>
-    </tr>
-    <tbody>
+        <!-- Brand -->
+        <a class="navbar-brand" href="#">Secret Diary</a>
 
-    </tbody>
-</table>
+        <!-- Links -->
+        <div class="collapse navbar-collapse justify-content-end" id="nav-content">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/create_diary.html">Create</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/public_diary.html">Public Diary</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/private_diary.html">Private Diary</a>
+                </li>
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<script type="text/javascript">
-    var API_ENDPOINT = "http://192.168.33.10:8080";
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout.html">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-    $.ajax({
+    <div class="clearfix"></div>
+    <br>
+    <table class="table" id="diary-table">
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Publish Date</th>
+            <th>Text</th>
+        </tr>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        var API_ENDPOINT = "http://192.168.33.10:8080";
+
+        $.ajax({
             url: API_ENDPOINT + '/diary',
             type: 'get',
-            success : function (response) {
-                if (response.status){
+            success: function (response) {
+                if (response.status) {
                     console.log(response.result);
-                    $.each(response.result, function( index, value ) {
+                    $.each(response.result, function (index, value) {
                         console.log(value);
                         var item = value;
-                        var content = "<tr><td>"+item.id+"</td><td>" + item.title + "</td><td>" + item.author + "</td><td>" + item.publish_date + "</td><td>" + item.text + "</td></tr>";
+                        var content = "<tr><td>" + item.id + "</td><td>" + item.title + "</td><td>" + item.author + "</td><td>" + item.publish_date + "</td><td>" + item.text + "</td></tr>";
                         console.log(content);
                         $('#diary-table').find('tbody').append(content);
                     });
                 }
             }
         });
-</script>
+    </script>
 </body>
 
 </html>

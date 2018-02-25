@@ -14,7 +14,7 @@ $('#login-btn').click(function () {
         success : function (response) {
             if (response.status == true){
                 window.sessionStorage.token = response.token;
-                location.replace(WEB_BASEURL + "/diary");
+                location.replace(WEB_BASEURL + "/public_diary.html");
             } else {
                 alert("Wrong username or password");
             }
