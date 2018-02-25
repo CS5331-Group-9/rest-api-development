@@ -75,13 +75,15 @@ class UserSchema(ma.Schema):
 
 class Diary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False)
     title = db.Column(db.String(255), nullable=False)
     author = db.Column(db.String(255), nullable=False)
     publish_date = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)
     public = db.Column(db.Boolean, nullable=False)
     text = db.Column(db.Text, nullable=False)
 
-    def __init__(self, title, author, public, text, publish_date):
+    def __init__(self, user_id, title, author, public, text, publish_date):
+        self.user_id = user_id
         self.title = title
         self.author = author
         self.public = public
@@ -242,7 +244,6 @@ def user_authenticate():
 # endpoint to expire user token
 @app.route("/users/expire", methods=["POST"])
 def user_expire():
-
     if 'token' not in request.form.keys():
         return make_json_response(None, False)
 
@@ -279,7 +280,7 @@ def get_user_diary():
     if user is None:
         return make_json_response("Invalid authentication token.", False)
 
-    diaries = Diary.query.filter_by(author=user.fullname).all()
+    diaries = Diary.query.filter_by(user_id=user.id).all()
     result = diaries_schema.dump(diaries)
 
     return make_json_response(result[0], True)
@@ -304,10 +305,11 @@ def add_diary():
         return make_json_response("Invalid authentication token.", False)
 
     author = user.fullname
+    user_id = user.id
     publish_date = datetime.datetime.now().replace(microsecond=0).isoformat()
     publish_date = getDateTimeFromISO8601String(publish_date)
 
-    new_diary = Diary(data['title'], author, data['public'], data['text'], publish_date)
+    new_diary = Diary(user_id, data['title'], author, data['public'], data['text'], publish_date)
 
     db.session.add(new_diary)
 
@@ -334,10 +336,10 @@ def delete_diary():
     if user is None:
         return make_json_response("Invalid authentication token.", False)
 
-    diary = Diary.query.get(request.form['id'])
+    diary = Diary.query.filter_by(user_id=user.id, id=request.form['id']).first()
 
     if diary is None:
-        return make_json_response("Invalid diary ID.", False)
+        return make_json_response("Invalid diary ID or authentication token.", False)
 
     db.session.delete(diary)
     db.session.commit()
