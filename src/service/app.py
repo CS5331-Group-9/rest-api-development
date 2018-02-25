@@ -361,15 +361,15 @@ def update_diary_permission():
     if user is None:
         return make_json_response("Invalid authentication token.", False)
 
-    if request.form['private'] == 'true' or request.form['private'] == True:
+    if request.form['private'] == 'true' or request.form['private'] is True:
         permission = True
     else:
         permission = False
 
-    diary = Diary.query.get(request.form['id'])
+    diary = Diary.query.filter_by(user_id=user.id, id=request.form['id']).first()
 
     if diary is None:
-        return make_json_response("Invalid diary ID.", False)
+        return make_json_response("Invalid diary ID or authentication token.", False)
 
     diary.public = permission
     db.session.commit()
