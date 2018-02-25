@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Logout</title>
+</head>
+<body>
+<h1>Logging out</h1>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    var API_ENDPOINT = "http://192.168.33.10:8080";
+    var WEB_BASEURL = "http://192.168.33.10:80";
+
+    var token = window.sessionStorage.getItem('token');
+
+    $.ajax({
+            url: API_ENDPOINT + '/users/expire',
+            data: {"token" : token},
+            type: 'post',
+            success : function (response) {
+                window.sessionStorage.removeItem('token')
+                alert("You have been logged out successfully.");
+                location.replace(WEB_BASEURL + "/login.html");
+            }
+        });
+</script>
+
+</body>
+</html>
