@@ -353,7 +353,7 @@ def update_diary_permission():
     if 'token' not in request.form.keys():
         return make_json_response("Invalid authentication token.", False)
 
-    if 'id' not in request.form.keys() or 'private' not in request.form.keys():
+    if 'id' not in request.form.keys() or 'public' not in request.form.keys():
         return make_json_response("Missing parameters.", False)
 
     user = User.query.filter_by(token=request.form['token']).first()
@@ -361,7 +361,7 @@ def update_diary_permission():
     if user is None:
         return make_json_response("Invalid authentication token.", False)
 
-    if request.form['private'] == 'true' or request.form['private'] is True:
+    if request.form['public'] == 'true' or request.form['public'] is True:
         permission = True
     else:
         permission = False
