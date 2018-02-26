@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Public Diary</title>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" crossorigin="anonymous">
+    <script src="assets/js/access_control.js"></script>
 </head>
 
 <body>
@@ -39,35 +40,36 @@
 
     <div class="clearfix"></div>
     <br>
-    <table class="table" id="diary-table">
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Publish Date</th>
-            <th>Text</th>
-        </tr>
+
+    <div class="col-md-12">
+        <h2>Public Diaries</h2>
+        <table class="table" id="diary-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Publish Date</th>
+                <th>Text</th>
+            </tr>
+        </thead>
         <tbody>
 
         </tbody>
     </table>
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
+    <script src="assets/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript">
-        var API_ENDPOINT = "http://192.168.33.10:8080";
-
         $.ajax({
             url: API_ENDPOINT + '/diary',
             type: 'get',
             success: function (response) {
                 if (response.status) {
-                    console.log(response.result);
                     $.each(response.result, function (index, value) {
                         console.log(value);
                         var item = value;
                         var content = "<tr><td>" + item.id + "</td><td>" + item.title + "</td><td>" + item.author + "</td><td>" + item.publish_date + "</td><td>" + item.text + "</td></tr>";
-                        console.log(content);
                         $('#diary-table').find('tbody').append(content);
                     });
                 }

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/bootstrap-toggle.css" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/bootstrap-toggle-animated.css" crossorigin="anonymous">
+    <script src="assets/js/access_control.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 
@@ -65,7 +66,7 @@
                             $.ajax({
                                 url: API_ENDPOINT + '/diary',
                                 data: {
-                                    token: window.sessionStorage.token
+                                    token: window.localStorage.token
                                 },
                                 type: 'post',
                                 success: function (response) {
@@ -90,14 +91,14 @@
 
                         </script>
                     </tbody>
+                </table>
             </form>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
+    <script src="assets/js/jquery-3.3.1.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/bootstrap-toggle.js"></script>
-    <script src="assets/js/private_diary.js"></script>
+    <script src="assets/js/diary.js"></script>
 
 </body>
 

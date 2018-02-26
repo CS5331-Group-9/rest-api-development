@@ -66,7 +66,13 @@ class UserSchema(ma.Schema):
     fullname = fields.String(required=True, validate=[
         validate.Length(min=1, error="Fullname cannot be empty")
     ])
-    age = fields.Integer(required=True, validate=lambda n: n > 0)
+    age = fields.Integer(required=True, validate=lambda n: n > 0, error_messages={
+        "validator_failed": "Age must be a valid integer.",
+        "null": "Age must be a valid integer.",
+        "required": "Age must be a valid integer.",
+        "type": "Age must be a valid integer.",
+        "invalid": "Age must be a valid integer."
+    })
 
     class Meta:
         # Fields to expose
