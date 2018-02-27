@@ -16,6 +16,7 @@ from marshmallow import Schema, fields, pre_load, validate
 import datetime
 import dateutil.parser
 import pytz
+import cgi
 
 
 app = Flask(__name__)
@@ -161,6 +162,7 @@ def add_user():
         return make_json_response(errors, False)
 
     password_hash = bcrypt.hashpw(data['password'].encode("utf-8"), bcrypt.gensalt())
+    data = html_encode_input(data)
     new_user = User(data['username'], password_hash, data['fullname'], data['age'])
 
     db.session.add(new_user)
@@ -309,6 +311,14 @@ def getDateTimeFromISO8601String(s):
     return d
 
 
+def html_encode_input(input):
+    new_input = {}
+    for key in input:
+        new_input[key] = input[key] if input[key] is True or input[key] is False or isinstance(input[key], (int, long)) else cgi.escape(input[key])
+
+    return new_input
+
+
 # endpoint to create diary
 @app.route("/diary/create", methods=["POST"])
 def add_diary():
@@ -325,9 +335,10 @@ def add_diary():
     if user is None:
         return make_json_response("Invalid authentication token.", False)
 
+    data = html_encode_input(data)
     author = user.fullname
     user_id = user.id
-    publish_date = datetime.datetime.now(tzlocal()).replace(microsecond=0).isoformat()
+    publish_date = datetime.datetime.now().replace(microsecond=0).isoformat()
     publish_date = getDateTimeFromISO8601String(publish_date)
 
     new_diary = Diary(user_id, data['title'], author, data['public'], data['text'], publish_date)
