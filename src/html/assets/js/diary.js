@@ -1,8 +1,8 @@
 //Login Page
 $('#login-btn').click(function () {
     var user_info = {
-        'username' : $('#username').val(),
-        'password' : $('#password').val()
+        'username' : escape($('#username').val()),
+        'password' : escape($('#password').val())
     };
 
     $.ajax({
@@ -24,10 +24,10 @@ $('#login-btn').click(function () {
 //Register Page
 $('#register-btn').click(function () {
     var user_info = {
-        'username' : $('#username').val(),
-        'password' : $('#password').val(),
-        'fullname' : $('#fullname').val(),
-        'age' : $('#age').val()
+        'username' : escape($('#username').val()),
+        'password' : escape($('#password').val()),
+        'fullname' : escape($('#fullname').val()),
+        'age' : escape($('#age').val())
     };
 
     $.ajax({
@@ -60,10 +60,10 @@ $('#register-btn').click(function () {
 //Create Diary
 $('#submit-diary').click(function () {
     var new_diary = {
-        token: window.localStorage.token,
-        title: $('#diary-title').val(),
-        public: $('#isPublic').prop('checked'),
-        text: $('#diary-text').val()
+        token: escape(window.localStorage.token),
+        title: escape($('#diary-title').val()),
+        public: escape($('#isPublic').prop('checked')),
+        text: escape($('#diary-text').val())
     };
 
     if (!new_diary.title ||
@@ -96,8 +96,8 @@ $(document).ready(function () {
             url: API_ENDPOINT + '/diary/delete',
             contentType: "application/json;",
             data: JSON.stringify({
-                token: window.localStorage.token,
-                id:id
+                token: escape(window.localStorage.token),
+                id:escape(id)
             }),
             type: 'post',
             success: function (response) {
@@ -120,9 +120,9 @@ $(document).ready(function () {
             url: API_ENDPOINT + '/diary/permission',
             contentType: "application/json;",
             data: JSON.stringify({
-                token: window.localStorage.token,
-                id:id,
-                private:!toggle_val
+                token: escape(window.localStorage.token),
+                id:escape(id),
+                private:escape(!toggle_val)
             }),
             type: 'post',
             success: function (response) {
