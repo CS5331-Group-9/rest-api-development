@@ -12,6 +12,7 @@ RUN pip install flask_marshmallow
 RUN pip install bcrypt
 RUN pip install marshmallow-sqlalchemy
 RUN pip install python-dateutil
+RUN easy_install --upgrade pytz
 
 RUN echo "ServerName localhost  " >> /etc/apache2/apache2.conf
 RUN echo "$user     hard    nproc       20" >> /etc/security/limits.conf

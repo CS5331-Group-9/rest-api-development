@@ -15,6 +15,8 @@ from sqlalchemy.sql import func
 from marshmallow import Schema, fields, pre_load, validate
 import datetime
 import dateutil.parser
+import pytz
+import cgi
 
 
 app = Flask(__name__)
@@ -160,6 +162,7 @@ def add_user():
         return make_json_response(errors, False)
 
     password_hash = bcrypt.hashpw(data['password'].encode("utf-8"), bcrypt.gensalt())
+    data = html_encode_input(data)
     new_user = User(data['username'], password_hash, data['fullname'], data['age'])
 
     db.session.add(new_user)
@@ -267,6 +270,8 @@ def get_all_diary():
 
     records = []
     for diary in all_diaries:
+        diary.publish_date = pytz.utc.localize(diary.publish_date)
+        diary.publish_date = diary.publish_date.replace(microsecond=0).isoformat()
         diary.publish_date = str(diary.publish_date)
         records.append(diary)
 
@@ -291,6 +296,8 @@ def get_user_diary():
     diaries = Diary.query.filter_by(user_id=user.id).all()
     records = []
     for diary in diaries:
+        diary.publish_date = pytz.utc.localize(diary.publish_date)
+        diary.publish_date = diary.publish_date.replace(microsecond=0).isoformat()
         diary.publish_date = str(diary.publish_date)
         records.append(diary)
 
@@ -302,6 +309,14 @@ def get_user_diary():
 def getDateTimeFromISO8601String(s):
     d = dateutil.parser.parse(s)
     return d
+
+
+def html_encode_input(input):
+    new_input = {}
+    for key in input:
+        new_input[key] = input[key] if input[key] is True or input[key] is False or isinstance(input[key], (int, long)) else cgi.escape(input[key])
+
+    return new_input
 
 
 # endpoint to create diary
@@ -320,6 +335,7 @@ def add_diary():
     if user is None:
         return make_json_response("Invalid authentication token.", False)
 
+    data = html_encode_input(data)
     author = user.fullname
     user_id = user.id
     publish_date = datetime.datetime.now().replace(microsecond=0).isoformat()
