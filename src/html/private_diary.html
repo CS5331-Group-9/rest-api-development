@@ -6,8 +6,8 @@
     <title>Private Diaries</title>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/bootstrap-toggle.css" crossorigin="anonymous">
-    <script src="assets/js/access_control.js"></script>
     <script src="assets/js/jquery-3.3.1.min.js"></script>
+    <script src="assets/js/access_control.js"></script>
 </head>
 
 <body>
@@ -60,13 +60,12 @@
                     </thead>
                     <tbody>
                         <script type="text/javascript">
-                            var API_ENDPOINT = "http://192.168.33.10:8080";
-
                             $.ajax({
                                 url: API_ENDPOINT + '/diary',
                                 contentType: "application/json;",
                                 data: JSON.stringify({"token" : token}),
                                 type: 'post',
+                                async:false,
                                 success: function (response) {
                                     if (response.status) {
                                         $.each(response.result, function (index, value) {
@@ -80,24 +79,18 @@
                                                 + '<input type="checkbox" class="toggle-clicked" ' + toggle_value + toggle_id + ' data-toggle="toggle" data-on="Public" data-off="Private">' + "</td></tr>";
                                             $('#private-diary-table').find('tbody').append(content);
                                         });
-
-
                                     }
                                 }
                             });
-
-
                         </script>
                     </tbody>
                 </table>
             </form>
         </div>
     </div>
-    <script src="assets/js/jquery-3.3.1.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/bootstrap-toggle.js"></script>
     <script src="assets/js/diary.js"></script>
-
 </body>
 
 </html>
