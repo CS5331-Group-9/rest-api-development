@@ -6,6 +6,7 @@
     <title>Public Diary</title>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" crossorigin="anonymous">
     <script src="assets/js/access_control.js"></script>
+    <script src="assets/js/purify.min.js"></script>
 </head>
 
 <body>
@@ -70,7 +71,8 @@
                     $.each(response.result, function (index, value) {
                         console.log(value);
                         var item = value;
-                        var content = "<tr><td>" + item.id + "</td><td>" + item.title + "</td><td>" + item.author + "</td><td>" + item.publish_date + "</td><td>" + item.text + "</td></tr>";
+                        var content = "<tr><td>" + DOMPurify.sanitize(item.id) + "</td><td>" + DOMPurify.sanitize(item.title) + "</td><td>" + DOMPurify.sanitize(item.author) + "</td><td>" + DOMPurify.sanitize(item.publish_date) + "</td><td>" + DOMPurify.sanitize(item.text) + "</td></tr>";
+
                         $('#diary-table').find('tbody').append(content);
                     });
                 }

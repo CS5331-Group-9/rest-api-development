@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="assets/css/bootstrap-toggle.css" crossorigin="anonymous">
     <script src="assets/js/jquery-3.3.1.min.js"></script>
     <script src="assets/js/access_control.js"></script>
+    <script src="assets/js/purify.min.js"></script>
 </head>
 
 <body>
@@ -74,9 +75,9 @@
                                             var del_id = ' id="del_' + item.id + '" '
                                             var toggle_id = ' id="toggle_' + item.id + '" '
 
-                                            var content = "<tr><td>" + item.id + "</td><td>" + item.title + "</td><td>" + item.author + "</td><td>" + item.publish_date + "</td><td>" + item.text + "</td><td>"
-                                                + '<button type="button" ' + del_id + ' class="btn btn-danger del-clicked">Delete</button>' + "</td><td>"
-                                                + '<input type="checkbox" class="toggle-clicked" ' + toggle_value + toggle_id + ' data-toggle="toggle" data-on="Public" data-off="Private">' + "</td></tr>";
+                                            var content = "<tr><td>" + DOMPurify.sanitize(item.id) + "</td><td>" + DOMPurify.sanitize(item.title) + "</td><td>" + DOMPurify.sanitize(item.author) + "</td><td>" + DOMPurify.sanitize(item.publish_date) + "</td><td>" + DOMPurify.sanitize(item.text) + "</td><td>"
+                                                + '<button type="button" ' + DOMPurify.sanitize(del_id) + ' class="btn btn-danger del-clicked">Delete</button>' + "</td><td>"
+                                                + '<input type="checkbox" class="toggle-clicked" ' + DOMPurify.sanitize(toggle_value) + DOMPurify.sanitize(toggle_id) + ' data-toggle="toggle" data-on="Public" data-off="Private">' + "</td></tr>";
                                             $('#private-diary-table').find('tbody').append(content);
                                         });
                                     }

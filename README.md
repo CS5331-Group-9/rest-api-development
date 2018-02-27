@@ -49,13 +49,28 @@ Frontend:
 2. HTML
 3. Bootstrap 4
 
+Security:
+1. DOMPurifier
+2. CGI
+
 #### Question 2: Are there any security considerations your team thought about?
 
-Answer: Please replace this sentence with your answer.
+Implemented
+1. Access Control for pages (prevent users who have not logged from accessing sensitive pages)
+2. Escaping user inputs using escape()
+3. Use DOMPurifier to escape output string before displaying
+4. Use CGI library to escape user string before inserting into the database (API)
+5. bcrypt for password hashing, which makes use of random salt, and even with the same input, the output hash will be different. This kind of protect against brute-forcing.
+
+Not Implemented:
+1) Set timer for token expiry date 
 
 #### Question 3: Are there any improvements you would make to the API specification to improve the security of the web application?
 
-Answer: Set timer for token expiry date
+Answer: 
+The documentation does not follow RESTful API.
+E.g. The api for deleting a diary should use 'DELETE' method instead of 'POST' 
+and the api for changing permission should use 'PUT' method instead of 'POST'
 
 #### Question 4: Are there any additional features you would like to highlight?
 
@@ -63,7 +78,10 @@ Answer: Please replace this sentence with your answer.
 
 #### Question 5: Is your web application vulnerable? If yes, how and why? If not, what measures did you take to secure it?
 
-Answer: Please replace this sentence with your answer.
+Answer: 
+1) The app does not use SSL so the website can be tampered. (MIM attack, network attacks)
+2) The token is stored in localStorage which is vulnerable to XSS
+3) We rely a lot on third party libraries, therefore, the website is as vulnerable as the strength of the libraries used. 
 
 #### Feedback: Is there any other feedback you would like to give?
 
