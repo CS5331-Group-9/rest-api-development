@@ -15,6 +15,7 @@ from sqlalchemy.sql import func
 from marshmallow import Schema, fields, pre_load, validate
 import datetime
 import dateutil.parser
+import pytz
 
 
 app = Flask(__name__)
@@ -267,6 +268,8 @@ def get_all_diary():
 
     records = []
     for diary in all_diaries:
+        diary.publish_date = pytz.utc.localize(diary.publish_date)
+        diary.publish_date = diary.publish_date.replace(microsecond=0).isoformat()
         diary.publish_date = str(diary.publish_date)
         records.append(diary)
 
@@ -291,6 +294,8 @@ def get_user_diary():
     diaries = Diary.query.filter_by(user_id=user.id).all()
     records = []
     for diary in diaries:
+        diary.publish_date = pytz.utc.localize(diary.publish_date)
+        diary.publish_date = diary.publish_date.replace(microsecond=0).isoformat()
         diary.publish_date = str(diary.publish_date)
         records.append(diary)
 
@@ -322,7 +327,7 @@ def add_diary():
 
     author = user.fullname
     user_id = user.id
-    publish_date = datetime.datetime.now().replace(microsecond=0).isoformat()
+    publish_date = datetime.datetime.now(tzlocal()).replace(microsecond=0).isoformat()
     publish_date = getDateTimeFromISO8601String(publish_date)
 
     new_diary = Diary(user_id, data['title'], author, data['public'], data['text'], publish_date)
