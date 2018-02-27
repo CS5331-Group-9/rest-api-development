@@ -22,17 +22,17 @@
         <div class="collapse navbar-collapse justify-content-end" id="nav-content">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="/create_diary.html">Create</a>
+                    <a class="nav-link" href="./create_diary.html">Create</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/public_diary.html">Public Diary</a>
+                    <a class="nav-link" href="./public_diary.html">Public Diary</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/private_diary.html">Private Diary</a>
+                    <a class="nav-link" href="./private_diary.html">Private Diary</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/logout.html">Logout</a>
+                    <a class="nav-link" href="./logout.html">Logout</a>
                 </li>
             </ul>
         </div>
@@ -63,6 +63,7 @@
     <script type="text/javascript">
         $.ajax({
             url: API_ENDPOINT + '/diary',
+            contentType: "application/json;",
             type: 'get',
             success: function (response) {
                 if (response.status) {

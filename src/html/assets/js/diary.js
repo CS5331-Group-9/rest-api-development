@@ -7,7 +7,8 @@ $('#login-btn').click(function () {
 
     $.ajax({
         url: API_ENDPOINT + '/users/authenticate',
-        data: user_info,
+        contentType: "application/json;",
+        data: JSON.stringify(user_info),
         type: 'post',
         success : function (response) {
             if (response.status == true){
@@ -31,7 +32,8 @@ $('#register-btn').click(function () {
 
     $.ajax({
         url: API_ENDPOINT + '/users/register',
-        data: user_info,
+        contentType: "application/json;",
+        data: JSON.stringify(user_info),
         type: 'post',
         success : function (response) {
             if (response.status == true){
@@ -70,7 +72,8 @@ $('#submit-diary').click(function () {
     } else {
         $.ajax({
             url: API_ENDPOINT + '/diary/create',
-            data: new_diary,
+            contentType: "application/json;",
+            data: JSON.stringify(new_diary),
             type: 'post',
             success: function (response) {
                 if (response.status == true) {
@@ -91,10 +94,11 @@ $(document).ready(function () {
 
         $.ajax({
             url: API_ENDPOINT + '/diary/delete',
-            data: {
+            contentType: "application/json;",
+            data: JSON.stringify({
                 token: window.localStorage.token,
                 id:id
-            },
+            }),
             type: 'post',
             success: function (response) {
                 if (response.status) {
@@ -114,11 +118,12 @@ $(document).ready(function () {
         var toggle_val = self.prop('checked');
         $.ajax({
             url: API_ENDPOINT + '/diary/permission',
-            data: {
+            contentType: "application/json;",
+            data: JSON.stringify({
                 token: window.localStorage.token,
                 id:id,
-                public:toggle_val
-            },
+                private:!toggle_val
+            }),
             type: 'post',
             success: function (response) {
                 if (response.status) {

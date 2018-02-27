@@ -11,7 +11,8 @@
 <script type="text/javascript">
     $.ajax({
             url: API_ENDPOINT + '/users/expire',
-            data: {"token" : token},
+            contentType: "application/json;",
+            data: JSON.stringify({"token" : token}),
             type: 'post',
             success : function (response) {
                 console.log(response);

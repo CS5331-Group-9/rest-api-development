@@ -142,11 +142,20 @@ diaries_schema = DiarySchema(many=True)
 insert_diary_schema = InsertDiarySchema()
 
 
+# Endpoints of APIs
+ENDPOINT_LIST = ['/', '/meta/heartbeat', '/meta/members', '/users/register',
+                 '/users/authenticate', '/users/expire', '/users', '/diary',
+                 '/diary/create', '/diary/delete', '/diary/permission']
+
+
 # endpoint to create new user
 @app.route("/users/register", methods=["POST"])
 def add_user():
+    if not request.is_json:
+        return make_json_response("Invalid request", False)
+
     # Validate and deserialize input
-    data, errors = user_schema.load(request.form)
+    data, errors = user_schema.load(request.json)
     if errors:
         return make_json_response(errors, False)
 
@@ -170,10 +179,13 @@ def add_user():
 # endpoint to show all users
 @app.route("/users", methods=["POST"])
 def get_user():
-    if 'token' not in request.form.keys():
+    if not request.is_json:
+        return make_json_response("Invalid request", False)
+
+    if 'token' not in request.json.keys():
         return make_json_response("Invalid authentication token.", False)
 
-    token_string = request.form['token']
+    token_string = request.json['token']
     user = User.query.filter_by(token=token_string).first()
 
     if user is None:
@@ -183,57 +195,16 @@ def get_user():
     return make_json_response(user_info, True, 200, None, True)
 
 
-# endpoint to get user detail by id
-@app.route("/users/<id>", methods=["GET"])
-def user_detail(id):
-    user = User.query.get(id)
-
-    if user is None:
-        return make_json_response("No result found.", False)
-
-    return make_json_response(user.as_dict())
-
-
-# endpoint to update user
-@app.route("/users/<id>", methods=["PUT"])
-def user_update(id):
-    user = User.query.get(id)
-
-    if user is None:
-        return make_json_response("Invalid user id, no result found.", False)
-
-    if 'username' not in request.form.keys() and 'password' not in request.form.keys():
-        return make_json_response("Missing parameters.", False)
-
-    username = request.form['username']
-    password = request.form['password']
-    password_hash = bcrypt.generate_password_hash(password)
-
-    user.password = password_hash
-    user.username = username
-
-    db.session.commit()
-    return make_json_response(user.as_dict())
-
-
-# endpoint to delete user
-@app.route("/users/<id>", methods=["DELETE"])
-def user_delete(id):
-    user = User.query.get(id)
-    db.session.delete(user)
-    db.session.commit()
-
-    return make_json_response(user.as_dict())
-
-
 # endpoint to authenticate user
 @app.route("/users/authenticate", methods=["POST"])
 def user_authenticate():
+    if not request.is_json:
+        return make_json_response("Invalid request", False)
 
-    if 'username' not in request.form.keys() and 'password' not in request.form.keys():
+    if 'username' not in request.json.keys() and 'password' not in request.json.keys():
         return make_json_response(None, False)
-    username = request.form['username']
-    password = request.form['password']
+    username = request.json['username']
+    password = request.json['password']
 
     user = User.query.filter_by(username=username).first()
 
@@ -250,10 +221,13 @@ def user_authenticate():
 # endpoint to expire user token
 @app.route("/users/expire", methods=["POST"])
 def user_expire():
-    if 'token' not in request.form.keys():
+    if not request.is_json:
+        return make_json_response("Invalid request", False)
+
+    if 'token' not in request.json.keys():
         return make_json_response(None, False)
 
-    token_string = request.form['token']
+    token_string = request.json['token']
 
     user = User.query.filter_by(token=token_string).first()
 
@@ -267,6 +241,25 @@ def user_expire():
     return make_json_response(None, True)
 
 
+# endpoint to show all users
+@app.route("/users/validate", methods=["POST"])
+def validate_user():
+    if not request.is_json:
+        return make_json_response("Invalid request", False)
+
+    if 'token' not in request.json.keys():
+        return make_json_response("Invalid authentication token.", False)
+
+    token_string = request.json['token']
+    user = User.query.filter_by(token=token_string).first()
+
+    if user is None:
+        return make_json_response("Invalid authentication token.", False)
+
+    user_info = {"username": user.username, "fullname": user.fullname, "age": user.age}
+    return make_json_response(user_info, True, 200, None, True)
+
+
 # endpoint to show all diaries
 @app.route("/diary", methods=["GET"])
 def get_all_diary():
@@ -278,10 +271,13 @@ def get_all_diary():
 # endpoint to delete user
 @app.route("/diary", methods=["POST"])
 def get_user_diary():
-    if 'token' not in request.form.keys():
+    if not request.is_json:
+        return make_json_response("Invalid request", False)
+
+    if 'token' not in request.json.keys():
         return make_json_response("Invalid authentication token.", False)
 
-    user = User.query.filter_by(token=request.form['token']).first()
+    user = User.query.filter_by(token=request.json['token']).first()
 
     if user is None:
         return make_json_response("Invalid authentication token.", False)
@@ -300,8 +296,11 @@ def getDateTimeFromISO8601String(s):
 # endpoint to create diary
 @app.route("/diary/create", methods=["POST"])
 def add_diary():
+    if not request.is_json:
+        return make_json_response("Invalid request", False)
+
     # Validate and deserialize input
-    data, errors = insert_diary_schema.load(request.form)
+    data, errors = insert_diary_schema.load(request.json)
     if errors:
         return make_json_response(errors, False)
 
@@ -331,18 +330,21 @@ def add_diary():
 # endpoint to delete diary
 @app.route("/diary/delete", methods=["POST"])
 def delete_diary():
-    if 'token' not in request.form.keys():
+    if not request.is_json:
+        return make_json_response("Invalid request", False)
+
+    if 'token' not in request.json.keys():
         return make_json_response("Invalid authentication token.", False)
 
-    if 'id' not in request.form.keys():
+    if 'id' not in request.json.keys():
         return make_json_response("Missing parameters.", False)
 
-    user = User.query.filter_by(token=request.form['token']).first()
+    user = User.query.filter_by(token=request.json['token']).first()
 
     if user is None:
         return make_json_response("Invalid authentication token.", False)
 
-    diary = Diary.query.filter_by(user_id=user.id, id=request.form['id']).first()
+    diary = Diary.query.filter_by(user_id=user.id, id=request.json['id']).first()
 
     if diary is None:
         return make_json_response("Invalid diary ID or authentication token.", False)
@@ -356,23 +358,26 @@ def delete_diary():
 # endpoint to adjust diary permission
 @app.route("/diary/permission", methods=["POST"])
 def update_diary_permission():
-    if 'token' not in request.form.keys():
+    if not request.is_json:
+        return make_json_response("Invalid request", False)
+
+    if 'token' not in request.json.keys():
         return make_json_response("Invalid authentication token.", False)
 
-    if 'id' not in request.form.keys() or 'public' not in request.form.keys():
+    if 'id' not in request.json.keys() or 'private' not in request.json.keys():
         return make_json_response("Missing parameters.", False)
 
-    user = User.query.filter_by(token=request.form['token']).first()
+    user = User.query.filter_by(token=request.json['token']).first()
 
     if user is None:
         return make_json_response("Invalid authentication token.", False)
 
-    if request.form['public'] == 'true' or request.form['public'] is True:
-        permission = True
-    else:
+    if request.json['private'] == 'true' or request.json['private'] is True:
         permission = False
+    else:
+        permission = True
 
-    diary = Diary.query.filter_by(user_id=user.id, id=request.form['id']).first()
+    diary = Diary.query.filter_by(user_id=user.id, id=request.json['id']).first()
 
     if diary is None:
         return make_json_response("Invalid diary ID or authentication token.", False)
@@ -381,12 +386,6 @@ def update_diary_permission():
     db.session.commit()
 
     return make_json_response(None)
-
-
-# Remember to update this list
-ENDPOINT_LIST = ['/', '/meta/heartbeat', '/meta/members', '/users/register',
-                 '/users/authenticate', '/users/expire', '/users', '/diary',
-                 '/diary/create', '/diary/delete', '/diary/permission']
 
 
 def make_json_response(data, status=True, code=200, key=None, raw=False):
