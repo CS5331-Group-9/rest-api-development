@@ -264,7 +264,13 @@ def validate_user():
 @app.route("/diary", methods=["GET"])
 def get_all_diary():
     all_diaries = Diary.query.filter_by(public=True).all()
-    result = diaries_schema.dump(all_diaries)
+
+    records = []
+    for diary in all_diaries:
+        diary.publish_date = str(diary.publish_date)
+        records.append(diary)
+
+    result = diaries_schema.dump(records)
     return make_json_response(result.data)
 
 
@@ -283,9 +289,14 @@ def get_user_diary():
         return make_json_response("Invalid authentication token.", False)
 
     diaries = Diary.query.filter_by(user_id=user.id).all()
-    result = diaries_schema.dump(diaries)
+    records = []
+    for diary in diaries:
+        diary.publish_date = str(diary.publish_date)
+        records.append(diary)
 
-    return make_json_response(result[0], True)
+    result = diaries_schema.dump(records)
+
+    return make_json_response(result.data, True)
 
 
 def getDateTimeFromISO8601String(s):
