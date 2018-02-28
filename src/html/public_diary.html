@@ -61,23 +61,9 @@
     </div>
 
     <script src="assets/js/jquery-3.3.1.min.js"></script>
+    <script src="assets/js/diary.js"></script>
     <script type="text/javascript">
-        $.ajax({
-            url: API_ENDPOINT + '/diary',
-            contentType: "application/json;",
-            type: 'get',
-            success: function (response) {
-                if (response.status) {
-                    $.each(response.result, function (index, value) {
-                        console.log(value);
-                        var item = value;
-                        var content = "<tr><td>" + DOMPurify.sanitize(item.id) + "</td><td>" + DOMPurify.sanitize(item.title) + "</td><td>" + DOMPurify.sanitize(item.author) + "</td><td>" + DOMPurify.sanitize(item.publish_date) + "</td><td>" + DOMPurify.sanitize(item.text) + "</td></tr>";
-
-                        $('#diary-table').find('tbody').append(content);
-                    });
-                }
-            }
-        });
+        getPublicDiary();
     </script>
 </body>
 

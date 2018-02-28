@@ -1,6 +1,7 @@
 var API_ENDPOINT = "http://192.168.33.10:8080";
 var WEB_BASEURL = "http://192.168.33.10";
 var loginRequired = ["logout.html", "private_diary.html", "create_diary.html"];
+var nonloginRequired = ["login.html", "register.html"];
 
 var token = window.localStorage.token;
 var currentPath = window.location.pathname+window.location.search;
@@ -32,7 +33,7 @@ if (token === undefined && loginRequired.indexOf(currentPath) !== -1){
 }
 
 //auto login
-if (token !== undefined && currentPath === "login.html"){
+if (token !== undefined && nonloginRequired.indexOf(currentPath) !== -1){
     ajax_post(API_ENDPOINT + '/users/validate', JSON.stringify({"token":token}), function(data) {
         if (data.status) {
             location.replace(WEB_BASEURL + "/private_diary.html");

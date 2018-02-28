@@ -162,7 +162,6 @@ def add_user():
         return make_json_response(errors, False)
 
     password_hash = bcrypt.hashpw(data['password'].encode("utf-8"), bcrypt.gensalt())
-    data = html_encode_input(data)
     new_user = User(data['username'], password_hash, data['fullname'], data['age'])
 
     db.session.add(new_user)
@@ -195,7 +194,7 @@ def get_user():
         return make_json_response("Invalid authentication token.", False)
 
     user_info = {"username": user.username, "fullname": user.fullname, "age": user.age}
-    return make_json_response(user_info, True, 200, None, True)
+    return make_json_response(user_info)
 
 
 # endpoint to authenticate user
@@ -218,7 +217,7 @@ def user_authenticate():
     user.token = token_string
     db.session.commit()
 
-    return make_json_response(token_string, True, 200, "token")
+    return make_json_response({"token": token_string})
 
 
 # endpoint to expire user token
@@ -335,7 +334,6 @@ def add_diary():
     if user is None:
         return make_json_response("Invalid authentication token.", False)
 
-    data = html_encode_input(data)
     author = user.fullname
     user_id = user.id
     publish_date = datetime.datetime.now().replace(microsecond=0).isoformat()
@@ -351,7 +349,7 @@ def add_diary():
         db.session.rollback()
         return make_json_response(err, False, 200)
 
-    return make_json_response(new_diary.id, True, 201)
+    return make_json_response({"id": new_diary.id}, True, 201)
 
 
 # endpoint to delete diary
@@ -391,7 +389,7 @@ def update_diary_permission():
     if 'token' not in request.json.keys():
         return make_json_response("Invalid authentication token.", False)
 
-    if 'id' not in request.json.keys() or 'private' not in request.json.keys():
+    if 'id' not in request.json.keys() or 'public' not in request.json.keys():
         return make_json_response("Missing parameters.", False)
 
     user = User.query.filter_by(token=request.json['token']).first()
@@ -399,10 +397,7 @@ def update_diary_permission():
     if user is None:
         return make_json_response("Invalid authentication token.", False)
 
-    if request.json['private'] == 'true' or request.json['private'] is True:
-        permission = False
-    else:
-        permission = True
+    permission = True if request.json['public'] == 'true' or request.json['public'] is True else False
 
     diary = Diary.query.filter_by(user_id=user.id, id=request.json['id']).first()
 

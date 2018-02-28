@@ -12,7 +12,7 @@ $('#login-btn').click(function () {
         type: 'post',
         success : function (response) {
             if (response.status == true){
-                window.localStorage.token = response.token;
+                window.localStorage.token = response.result.token;
                 location.replace(WEB_BASEURL + "/private_diary.html");
             } else {
                 alert("Wrong username or password");
@@ -60,10 +60,10 @@ $('#register-btn').click(function () {
 //Create Diary
 $('#submit-diary').click(function () {
     var new_diary = {
-        token: escape(window.localStorage.token),
-        title: escape($('#diary-title').val()),
-        public: escape($('#isPublic').prop('checked')),
-        text: escape($('#diary-text').val())
+        token: window.localStorage.token,
+        title: $('#diary-title').val(),
+        public: $('#isPublic').prop('checked'),
+        text: $('#diary-text').val()
     };
 
     if (!new_diary.title ||
@@ -86,6 +86,24 @@ $('#submit-diary').click(function () {
         });
     }
 });
+
+function getPublicDiary() {
+    $.ajax({
+        url: API_ENDPOINT + '/diary',
+        contentType: "application/json;",
+        type: 'get',
+        success: function (response) {
+            if (response.status) {
+                $.each(response.result, function (index, value) {
+                    var item = value;
+                    var content = "<tr><td>" + DOMPurify.sanitize(item.id) + "</td><td>" + DOMPurify.sanitize(item.title) + "</td><td>" + DOMPurify.sanitize(item.author) + "</td><td>" + DOMPurify.sanitize(item.publish_date) + "</td><td>" + DOMPurify.sanitize(item.text) + "</td></tr>";
+
+                    $('#diary-table').find('tbody').append(content);
+                });
+            }
+        }
+    });
+}
 
 //Update Private Diary
 $(document).ready(function () {
@@ -122,7 +140,7 @@ $(document).ready(function () {
             data: JSON.stringify({
                 token: escape(window.localStorage.token),
                 id:escape(id),
-                private:escape(!toggle_val)
+                public:escape(toggle_val)
             }),
             type: 'post',
             success: function (response) {
