@@ -1,8 +1,8 @@
 //Login Page
 $('#login-btn').click(function () {
     var user_info = {
-        'username' : escape($('#username').val()),
-        'password' : escape($('#password').val())
+        'username' : $('#username').val(),
+        'password' : $('#password').val()
     };
 
     $.ajax({
@@ -24,10 +24,10 @@ $('#login-btn').click(function () {
 //Register Page
 $('#register-btn').click(function () {
     var user_info = {
-        'username' : escape($('#username').val()),
-        'password' : escape($('#password').val()),
-        'fullname' : escape($('#fullname').val()),
-        'age' : escape($('#age').val())
+        'username' : $('#username').val(),
+        'password' : $('#password').val(),
+        'fullname' : $('#fullname').val(),
+        'age' : $('#age').val()
     };
 
     $.ajax({
@@ -114,8 +114,8 @@ $(document).ready(function () {
             url: API_ENDPOINT + '/diary/delete',
             contentType: "application/json;",
             data: JSON.stringify({
-                token: escape(window.localStorage.token),
-                id:escape(id)
+                token: window.localStorage.token,
+                id: id
             }),
             type: 'post',
             success: function (response) {
@@ -138,9 +138,9 @@ $(document).ready(function () {
             url: API_ENDPOINT + '/diary/permission',
             contentType: "application/json;",
             data: JSON.stringify({
-                token: escape(window.localStorage.token),
-                id:escape(id),
-                public:escape(toggle_val)
+                token: window.localStorage.token,
+                id: id,
+                public: toggle_val
             }),
             type: 'post',
             success: function (response) {
