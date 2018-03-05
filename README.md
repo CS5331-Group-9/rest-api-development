@@ -14,7 +14,8 @@ CS5331 Assignment 1 Project Reference Repository
 
 ![Private Diary Screenshot](./img/private_diary.png)
 
-![Logout Diary Screenshot](./img/logout_diary.png)
+![Logout Screenshot](./img/logout.png)
+
 
 ## Administration and Evaluation
 
