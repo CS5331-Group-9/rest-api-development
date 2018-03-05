@@ -19,14 +19,12 @@ CS5331 Assignment 1 Project Reference Repository
 
 ## Administration and Evaluation
 
-Please fill out this section with details relevant to your team.
-
 ### Team Members
 
-1.Cai Guoyuan Aaron
-2.Jin Tianma
-3.Rakkappan Lakshmanan
-4.Sun Zelun
+1. Cai Guoyuan Aaron
+2. Jin Tianma
+3. Rakkappan Lakshmanan
+4. Sun Zelun
 
 ### Short Answer Questions
 
@@ -92,8 +90,8 @@ Answer: Consider to include vagrant in this assignment, since most of us are not
     - Wrote documentation
     - Wrote RESTApi
 2. Jin Tianma
-    - Wrote RESTApi
     - Wrote Front-end pages
+    - Wrote RESTApi
 3. Rakkappan Lakshmanan
     - Wrote Front-end pages
     - Implement DOMPurifier to escape user input when displaying
