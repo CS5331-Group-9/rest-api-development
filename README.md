@@ -4,10 +4,17 @@ CS5331 Assignment 1 Project Reference Repository
 
 ## Screenshots
 
-Please replace the example screenshots with screenshots of your completed
-project. Feel free to include more than one.
+![Login Screenshot](./img/login_page.png)
 
-![Sample Screenshot](./img/samplescreenshot.png)
+![Register Screenshot](./img/register_page.png)
+
+![Create Diary Screenshot](./img/create_diary.png)
+
+![Public Diary Screenshot](./img/public_diary.png)
+
+![Private Diary Screenshot](./img/private_diary.png)
+
+![Logout Diary Screenshot](./img/logout_diary.png)
 
 ## Administration and Evaluation
 
@@ -60,18 +67,20 @@ and the api for changing permission should use 'PUT' method instead of 'POST'
 
 #### Question 4: Are there any additional features you would like to highlight?
 
-Answer: None
+Answer: We have access control on front end pages, only logged in user can view create and private diary pages.
 
 #### Question 5: Is your web application vulnerable? If yes, how and why? If not, what measures did you take to secure it?
 
 Answer: 
+Yes, there are some vulnerabilities in our web application.
 1) The app does not use SSL so the website can be tampered. (MIM attack, network attacks)
 2) The token is stored in localStorage which is vulnerable to XSS
 3) We rely a lot on third party libraries, therefore, the website is as vulnerable as the strength of the libraries used. 
+4) We rely on JavaScript to control page redirection which will encounter some issues if user's browser disabled javascript.
 
 #### Feedback: Is there any other feedback you would like to give?
 
-Answer: None
+Answer: Consider to include vagrant in this assignment, since most of us are not using ubuntu OS as our daily drive, so it might be useful to introduce vm concept to kick start our assignment.  
 
 ### Declaration
 
@@ -80,6 +89,7 @@ Answer: None
 1. Cai Guoyuan Aaron
     - Wrote Front-end pages
     - Wrote documentation
+    - Wrote RESTApi
 2. Jin Tianma
     - Wrote RESTApi
     - Wrote Front-end pages
@@ -93,4 +103,5 @@ Answer: None
     - Wrote RESTApi
     - Wrote Front-end pages
     - Designed database
+    - Wrote documentation
 
