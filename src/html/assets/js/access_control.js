@@ -1,7 +1,7 @@
 var API_ENDPOINT = "http://192.168.33.10:8080";
 var WEB_BASEURL = "http://192.168.33.10";
 var loginRequired = ["logout.html", "private_diary.html", "create_diary.html"];
-var nonloginRequired = ["login.html", "register.html"];
+var nonloginRequired = ["login.html", "register.html", ""];
 
 var token = window.localStorage.token;
 var currentPath = window.location.pathname+window.location.search;
@@ -27,11 +27,6 @@ function ajax_post(url, data, callback) {
     xmlhttp.send(data);
 }
 
-if (token === undefined && loginRequired.indexOf(currentPath) !== -1){
-    alert("Please login first");
-    location.replace(window.location.origin + "/login.html");
-}
-
 //auto login
 if (token !== undefined && nonloginRequired.indexOf(currentPath) !== -1){
     ajax_post(API_ENDPOINT + '/users/validate', JSON.stringify({"token":token}), function(data) {
@@ -42,4 +37,14 @@ if (token !== undefined && nonloginRequired.indexOf(currentPath) !== -1){
             window.localStorage.removeItem('token');
         }
     });
+}
+
+//redirect to login page
+if (currentPath === ""){
+    location.replace(window.location.origin + "/login.html");
+}
+
+if (token === undefined && loginRequired.indexOf(currentPath) !== -1){
+    alert("Please login first");
+    location.replace(window.location.origin + "/login.html");
 }
